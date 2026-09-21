@@ -1,44 +1,112 @@
-<script>
-      const startButton = document.querySelector("#start-button");
-      const startOverlay = document.querySelector("#start-overlay");
-      const sceneEl = document.querySelector('a-scene');
-
-      if (startButton) {
-        startButton.addEventListener('click', () => {
-          startOverlay.style.display = 'none';
-          
-          // 啟動 AR 系統
-          const arSystem = sceneEl.systems["mindar-image-system"];
-          if (arSystem) {
-            arSystem.start();
-          }
-
-          // 預先載入並解鎖所有影片（繞過手機限制）
-          const videos = document.querySelectorAll('video');
-          videos.forEach(video => {
-            video.muted = false;
-            video.play().then(() => {
-              video.pause(); // 預載後先暫停，等待對準圖片
-              video.currentTime = 0;
-            }).catch(e => console.log("影片初始化:", e));
-          });
-        });
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>希晨的 AR 成長展覽館</title>
+    
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #start-overlay {
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.85); color: white;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        z-index: 9999; font-family: sans-serif;
+        text-align: center;
       }
+      #start-button {
+        padding: 15px 35px; font-size: 18px; background-color: #28a745;
+        color: white; border: none; border-radius: 25px; cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
 
-      // 關鍵：綁定圖片識別事件，對準即播，移開即停
-      const targets = document.querySelectorAll('[mindar-image-target]');
-      targets.forEach((target, index) => {
-        const videoEl = document.querySelector(`#video${index}`);
-        if (target && videoEl) {
-          target.addEventListener('targetFound', () => {
-            console.log(`成功識別目標 ${index}，播放影片`);
-            videoEl.play().catch(err => console.log("播放失敗:", err));
-          });
-          
-          target.addEventListener('targetLost', () => {
-            console.log(`丟失目標 ${index}，暫停影片`);
-            videoEl.pause();
+    <div id="start-overlay">
+      <h2>歡迎來到希晨的 AR 世界</h2>
+      <p style="font-size: 14px; opacity: 0.8;">請點擊下方按鈕開始體驗</p>
+      <button id="start-button">點擊這裡開始</button>
+    </div>
+
+    <a-scene 
+      mindar-image="imageTargetSrc: ./targets.mind;" 
+      color-space="sRGB" 
+      renderer="colorManagement: true, physicallyCorrectLights" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
+      
+      <a-assets>
+        <video id="video0" src="./video0.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="video1" src="./video1.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="video2" src="./video2.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="video3" src="./video3.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="video4" src="./video4.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-video src="#video0" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-video src="#video1" width="1" height="0.5625" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-video src="#video2" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-video src="#video3" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-video src="#video4" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const startButton = document.querySelector("#start-button");
+        const startOverlay = document.querySelector("#start-overlay");
+        const sceneEl = document.querySelector('a-scene');
+
+        if (startButton) {
+          startButton.addEventListener('click', () => {
+            startOverlay.style.display = 'none';
+            
+            const arSystem = sceneEl.systems["mindar-image-system"];
+            if (arSystem) {
+              arSystem.start();
+            }
+
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+              video.muted = false;
+              video.play().then(() => {
+                video.pause();
+                video.currentTime = 0;
+              }).catch(e => console.log("影片初始化:", e));
+            });
           });
         }
+
+        const targets = document.querySelectorAll('[mindar-image-target]');
+        targets.forEach((target, index) => {
+          const videoEl = document.querySelector(`#video${index}`);
+          if (target && videoEl) {
+            target.addEventListener('targetFound', () => {
+              videoEl.play().catch(err => console.log("播放失敗:", err));
+            });
+            
+            target.addEventListener('targetLost', () => {
+              videoEl.pause();
+            });
+          }
+        });
       });
     </script>
+  </body>
+</html>
