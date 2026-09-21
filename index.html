@@ -1,4 +1,77 @@
-<script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #start-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: sans-serif;
+        color: white;
+      }
+      #start-button {
+        padding: 15px 30px;
+        font-size: 18px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="start-overlay">
+      <h2 style="margin-bottom: 20px;">希晨 Portfolio AR 展覽館</h2>
+      <button id="start-button">點擊進入 AR 體驗</button>
+    </div>
+
+    <a-scene mindar-image="imageTargetSrc: targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <video id="video0" src="video0.mp4" preload="metadata" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video1" src="video1.mp4" preload="metadata" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video2" src="video2.mp4" preload="metadata" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video3" src="video3.mp4" preload="metadata" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video4" src="video4.mp4" preload="metadata" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="index: 0">
+        <a-video src="#video0" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="index: 1">
+        <a-video src="#video1" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="index: 2">
+        <a-video src="#video2" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="index: 3">
+        <a-video src="#video3" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="index: 4">
+        <a-video src="#video4" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
+      </a-entity>
+    </a-scene>
+
+    <script>
       document.addEventListener("DOMContentLoaded", function() {
         var startButton = document.querySelector("#start-button");
         var startOverlay = document.querySelector("#start-overlay");
@@ -29,13 +102,10 @@
           });
         }
 
-        // 修正後的精準綁定，確保每一張識別圖對應正確的影片
-        var targets = document.querySelectorAll('[mindar-image-target]');
-        targets.forEach(function(target) {
-          var indexAttr = target.getAttribute('mindar-image-target');
-          var index = indexAttr.replace('index: ', '').trim();
-          var videoEl = document.querySelector("#video" + index);
-          
+        // 使用最穩陣的安全迴圈绑定
+        [0, 1, 2, 3, 4].forEach(function(i) {
+          var target = document.querySelector('[mindar-image-target="index: ' + i + '"]');
+          var videoEl = document.querySelector("#video" + i);
           if (target && videoEl) {
             target.addEventListener('targetFound', function() {
               videoEl.play().catch(function(err) {});
@@ -47,3 +117,5 @@
         });
       });
     </script>
+  </body>
+</html>
