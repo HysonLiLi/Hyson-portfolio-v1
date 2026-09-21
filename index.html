@@ -45,11 +45,11 @@
 
     <a-scene mindar-image="imageTargetSrc: targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-        <video id="video0" src="video0.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
-        <video id="video1" src="video1.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
-        <video id="video2" src="video2.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
-        <video id="video3" src="video3.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
-        <video id="video4" src="video4.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video0" src="video0.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline></video>
+        <video id="video1" src="video1.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline></video>
+        <video id="video2" src="video2.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline></video>
+        <video id="video3" src="video3.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline></video>
+        <video id="video4" src="video4.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -88,26 +88,26 @@
                 arSystem.start();
               }
 
+              // 強制加載所有影片解鎖權限
               for (var i = 0; i < 5; i++) {
                 var video = document.querySelector("#video" + i);
                 if (video) {
-                  video.muted = false;
-                  video.play().then(function() {
-                    this.pause();
-                    this.currentTime = 0;
-                  }.bind(video)).catch(function(e) {});
+                  video.load();
                 }
               }
             }, { once: true });
           });
         }
 
+        // 綁定識別成功與遺失事件
         [0, 1, 2, 3, 4].forEach(function(i) {
           var target = document.querySelector('[mindar-image-target="index: ' + i + '"]');
           var videoEl = document.querySelector("#video" + i);
           if (target && videoEl) {
             target.addEventListener('targetFound', function() {
-              videoEl.play().catch(function(err) {});
+              videoEl.play().catch(function(err) {
+                console.log("Play error: ", err);
+              });
             });
             target.addEventListener('targetLost', function() {
               videoEl.pause();
