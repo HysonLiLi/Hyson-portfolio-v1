@@ -1,69 +1,75 @@
-<!DOCTYPE html> 
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>希晨的 AR 成長展覽館</title>
-    
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    
     <style>
-      body { margin: 0; overflow: hidden; }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
       #start-overlay {
-        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.85); color: white;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        z-index: 9999; font-family: sans-serif;
-        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: sans-serif;
+        color: white;
       }
       #start-button {
-        padding: 15px 35px; font-size: 18px; background-color: #28a745;
-        color: white; border: none; border-radius: 25px; cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold;
-        margin-top: 20px;
+        padding: 15px 30px;
+        font-size: 18px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       }
     </style>
   </head>
   <body>
-
+    <!-- 啟動遮罩與按鈕（解決手機自動播放限制） -->
     <div id="start-overlay">
-      <h2>歡迎來到希晨的 AR 世界</h2>
-      <p style="font-size: 14px; opacity: 0.8;">請點擊下方按鈕開始體驗</p>
-      <button id="start-button">點擊這裡開始</button>
+      <h2 style="margin-bottom: 20px;">希晨 Portfolio AR 展覽館</h2>
+      <button id="start-button">點擊進入 AR 體驗</button>
     </div>
 
-    <a-scene 
-      mindar-image="imageTargetSrc: ./targets.mind;" 
-      color-space="sRGB" 
-      renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" 
-      device-orientation-permission-ui="enabled: false">
-      
+    <a-scene mindar-image="imageTargetSrc: targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-        <video id="video0" src="./video0.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
-        <video id="video1" src="./video1.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
-        <video id="video2" src="./video2.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
-        <video id="video3" src="./video3.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
-        <video id="video4" src="./video4.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="video2" src="video2.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video3" src="video3.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video4" src="video4.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video6" src="video6.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
+        <video id="video10" src="video10.mp4" preload="auto" response-type="arraybuffer" crossorigin webkit-playsinline autoplay muted playsinline></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#video0" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      <!-- 對應編號 2, 3, 4, 6, 10 的識別圖目標 -->
+      <a-entity mindar-image-target="index: 2">
+        <a-video src="#video2" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 1">
-        <a-video src="#video1" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      <a-entity mindar-image-target="index: 3">
+        <a-video src="#video3" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 2">
-        <a-video src="#video2" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      <a-entity mindar-image-target="index: 4">
+        <a-video src="#video4" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 3">
-        <a-video src="#video3" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      <a-entity mindar-image-target="index: 6">
+        <a-video src="#video6" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 4">
-        <a-video src="#video4" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      <a-entity mindar-image-target="index: 10">
+        <a-video src="#video10" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
     </a-scene>
 
@@ -72,37 +78,40 @@
         var startButton = document.querySelector("#start-button");
         var startOverlay = document.querySelector("#start-overlay");
         var sceneEl = document.querySelector('a-scene');
+        var videoIndices = [2, 3, 4, 6, 10];
 
         if (startButton) {
-          startButton.addEventListener('click', function() {
-            startOverlay.style.display = 'none';
-            
-            var arSystem = sceneEl.systems["mindar-image-system"];
-            if (arSystem) {
-              arSystem.start();
-            }
-
-            for (var i = 0; i < 5; i++) {
-              var video = document.querySelector("#video" + i);
-              if (video) {
-                video.muted = false;
-                video.play().then(function() {
-                  this.pause();
-                  this.currentTime = 0;
-                }.bind(video)).catch(function(e) {});
+          ['click', 'touchend'].forEach(function(eventType) {
+            startButton.addEventListener(eventType, function(e) {
+              e.preventDefault();
+              startOverlay.style.display = 'none';
+              
+              var arSystem = sceneEl.systems["mindar-image-system"];
+              if (arSystem) {
+                arSystem.start();
               }
-            }
+
+              videoIndices.forEach(function(i) {
+                var video = document.querySelector("#video" + i);
+                if (video) {
+                  video.muted = false;
+                  video.play().then(function() {
+                    this.pause();
+                    this.currentTime = 0;
+                  }.bind(video)).catch(function(e) {});
+                }
+              });
+            }, { once: true });
           });
         }
 
-        var targets = document.querySelectorAll('[mindar-image-target]');
-        targets.forEach(function(target, index) {
-          var videoEl = document.querySelector("#video" + index);
+        videoIndices.forEach(function(i) {
+          var target = document.querySelector('[mindar-image-target="index: ' + i + '"]');
+          var videoEl = document.querySelector("#video" + i);
           if (target && videoEl) {
             target.addEventListener('targetFound', function() {
               videoEl.play().catch(function(err) {});
             });
-            
             target.addEventListener('targetLost', function() {
               videoEl.pause();
             });
