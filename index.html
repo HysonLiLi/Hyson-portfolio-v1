@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
   <head>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>我的免費 5 套混合型 WebAR 系統</title>
+    <title>希晨的 AR 成長展覽館</title>
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -11,30 +12,37 @@
       body { margin: 0; overflow: hidden; }
       #start-overlay {
         position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.9); color: white;
+        background: rgba(0, 0, 0, 0.85); color: white;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         z-index: 9999; font-family: sans-serif;
+        text-align: center;
       }
       #start-button {
         padding: 15px 35px; font-size: 18px; background-color: #28a745;
         color: white; border: none; border-radius: 25px; cursor: pointer;
         box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold;
+        margin-top: 20px;
       }
     </style>
   </head>
   <body>
 
     <div id="start-overlay">
-      <p style="margin-bottom: 20px; font-size: 16px; letter-spacing: 1px;">5套 AR 系統已就緒</p>
+      <h2>歡迎來到希晨的 AR 世界</h2>
+      <p style="font-size: 14px; opacity: 0.8;">請點擊下方按鈕開始體驗</p>
       <button id="start-button">點擊這裡開始</button>
     </div>
 
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene 
+      mindar-image="imageTargetSrc: ./targets.mind;" 
+      color-space="sRGB" 
+      renderer="colorManagement: true, physicallyCorrectLights" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
       
       <a-assets>
-        <video id="video0" src="./video0.mp4" preload="auto" loop="true" muted playsinline webkit-playsinline crossorigin="anonymous"></video>
-        <video id="video1" src="./video1.mp4" preload="auto" loop="true" muted playsinline webkit-playsinline crossorigin="anonymous"></video>
-        
+        <video id="video0" src="./video0.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="video1" src="./video1.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
         <video id="video2" src="./video2.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
         <video id="video3" src="./video3.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
         <video id="video4" src="./video4.mp4" preload="auto" loop="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
@@ -42,18 +50,46 @@
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0" id="target0">
-        <a-video src="#video0" width="1" height="1.777" scale="1.05 1.05 1" position="0 0 0" rotation="0 0 0"></a-video>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-video src="#video0" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
       </a-entity>
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-video src="#video1" width="1" height="0.5625" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-video src="#video2" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-video src="#video3" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-video src="#video4" width="1" height="1.777" position="0 0 0" rotation="0 0 0"></a-video>
+      </a-entity>
+    </a-scene>
 
-      <a-entity mindar-image-target="targetIndex: 1" id="target1">
-        <a-video src="#video1" width="1" height="0.5625" scale="1.05 1.05 1" position="0 0 0" rotation="0 0 0"></a-video>
-      </a-entity>
+    <!-- 直接執行的 Script，確保點擊事件 100% 成功綁定 -->
+    <script>
+      const startButton = document.querySelector("#start-button");
+      const startOverlay = document.querySelector("#start-overlay");
+      const sceneEl = document.querySelector('a-scene');
 
-      <a-entity mindar-image-target="targetIndex: 2" id="target2">
-        <a-video src="#video2" width="1" height="1.777" scale="1.05 1.05 1" position="0 0 0" rotation="0 0 0"></a-video>
-      </a-entity>
+      if (startButton) {
+        startButton.addEventListener('click', () => {
+          console.log("按鈕被點擊了！");
+          startOverlay.style.display = 'none';
+          
+          const arSystem = sceneEl.systems["mindar-image-system"];
+          if (arSystem) {
+            arSystem.start();
+          }
 
-      <a-entity mindar-image-target="targetIndex: 3" id="target3">
-        <a-video src="#video3" width="1" height="1.777" scale="1.05 1.05 1" position="0 0 0" rotation="0 0 0"></a-video>
-      </a-entity>
+          const videos = document.querySelectorAll('video');
+          videos.forEach(video => {
+            video.muted = false;
+            video.play().catch(e => console.log("影片播放:", e));
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
