@@ -44,7 +44,7 @@
       <button id="start-button">點擊進入 AR 體驗</button>
     </div>
 
-    <!-- 獨立影片元素（加入 muted 確保手機 100% 唔會攔截播放） -->
+    <!-- 獨立影片元素 -->
     <video id="video0" src="video0.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline muted style="display:none;"></video>
     <video id="video1" src="video1.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline muted style="display:none;"></video>
     <video id="video2" src="video2.mp4" preload="auto" loop crossorigin webkit-playsinline playsinline muted style="display:none;"></video>
@@ -54,19 +54,20 @@
     <a-scene mindar-image="imageTargetSrc: targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="index: 0">
+      <!-- 修正為正確的 targetIndex -->
+      <a-entity mindar-image-target="targetIndex: 0">
         <a-video src="#video0" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="index: 1">
+      <a-entity mindar-image-target="targetIndex: 1">
         <a-video src="#video1" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="index: 2">
+      <a-entity mindar-image-target="targetIndex: 2">
         <a-video src="#video2" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="index: 3">
+      <a-entity mindar-image-target="targetIndex: 3">
         <a-video src="#video3" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
-      <a-entity mindar-image-target="index: 4">
+      <a-entity mindar-image-target="targetIndex: 4">
         <a-video src="#video4" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-video>
       </a-entity>
     </a-scene>
@@ -88,7 +89,6 @@
                 arSystem.start();
               }
 
-              // 關鍵：在用戶點擊按鈕的瞬間，強制解鎖所有影片權限
               for (var i = 0; i < 5; i++) {
                 var video = document.querySelector("#video" + i);
                 if (video) {
@@ -102,9 +102,9 @@
           });
         }
 
-        // 綁定圖片識別與影片播放
+        // 同步修正 JavaScript 中的查詢屬性
         [0, 1, 2, 3, 4].forEach(function(i) {
-          var target = document.querySelector('[mindar-image-target="index: ' + i + '"]');
+          var target = document.querySelector('[mindar-image-target*="targetIndex: ' + i + '"]');
           var videoEl = document.querySelector("#video" + i);
           if (target && videoEl) {
             target.addEventListener('targetFound', function() {
